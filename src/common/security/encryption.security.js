@@ -1,0 +1,27 @@
+import crypto from "node:crypto";
+import { ENC_KEY, IV_LENGTH } from "../../config.js"
+
+
+export const encryption = (plaintext) => {
+    const iv = crypto.randomBytes(IV_LENGTH);
+    const cipher = crypto.createCipheriv("aes-256-cbc", ENC_KEY, iv)
+    let encryptData = cipher.update(plaintext, "utf-8", "hex")
+    encryptData += cipher.final("hex");
+    console.log({ cipher, iv, encryptData });
+    return `${iv.toString("hex")}::${encryptData}`
+
+}
+
+export const decryption = (cipherText) => {
+    const [iv, encryptData] = cipherText.split("::")
+    console.log({ iv, encryptData });
+    const iv_vector = Buffer.from(iv, "hex");
+    console.log({ iv_vector });
+
+    const decipherVector = crypto.createDecipheriv("aes-256-cbc", ENC_KEY, iv_vector)
+    let plaintext = decipherVector.update(encryptData, "hex", "utf-8")
+    plaintext += decipherVector.final("utf-8")
+    return plaintext
+
+
+}
