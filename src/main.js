@@ -5,7 +5,8 @@ import cors from "cors";
 // console.log(crypto.randomBytes(16).toString("hex").length);
 
 import {
-  authenticationController
+  authenticationController,
+  userController
 } from "./modules/index.js";
 import { connectDB } from "./DB/db.js";
 import { globalErrorHandling } from "./middleware/error.middleware.js";
@@ -26,6 +27,7 @@ app.get("/", async (req, res, next) => {
   return res.json({ message: "welcome to my API" });
 });
 app.use("/auth", authenticationController);
+app.use("/user", userController);
 
 app.all("{/*dummy}", (req, res, next) => {
   return res.status(404).json({ message: "Invalid application routing" });

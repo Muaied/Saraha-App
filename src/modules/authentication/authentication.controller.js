@@ -10,7 +10,7 @@ router.post('/signup', async (req, res, next) => {
 })
 
 router.post('/login', async (req, res, next) => {
-        const account = await login(req.body);
+        const account = await login(req.body, `${req.protocol}://${req.host}`);
         return successResponse({ res, data: account })
 })
 
