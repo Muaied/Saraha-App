@@ -6,6 +6,7 @@ export const PORT = parseInt(process.env.PORT ?? "9000")
 
 
 export const DB_URI = process.env.DB_URI
+export const REDIS_URI = process.env.REDIS_URI
 export const ENC_KEY = process.env.ENC_KEY
 export const IV_LENGTH = parseInt(process.env.IV_LENGTH ?? "16")
 export const ACCESS_USER_TOKEN_SIGNATURE = process.env.ACCESS_USER_TOKEN_SIGNATURE

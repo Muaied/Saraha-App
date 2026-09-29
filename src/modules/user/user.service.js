@@ -1,8 +1,10 @@
 import { findByIdAndUpdate } from "../../common/repository/index.js"
 import { userModel } from "../../DB/model/index.js"
-import { createToken } from "../../common/security/token.security.js"
-import { ACCESS_TOKEN_EXPIRES_IN } from "../../config.js"
+import { createLoginCredentials, createRevokeToken, createToken, userBaseRevokeTokenkey } from "../../common/security/token.security.js"
+import { ACCESS_TOKEN_EXPIRES_IN, REFRESH_TOKEN_EXPIRES_IN } from "../../config.js"
 import { ConflictException } from "../../common/exceptions/error.exception.js"
+import { LogoutEnum } from "../../common/enum/security.enum.js"
+import { set, del, keys } from "../../common/services/index.js"
 
 export const profile = async (account) => {
     return account
@@ -39,6 +41,27 @@ export const rotateToken = async (payload, user, issuer) => {
     // })
 
     // return { access_token, refresh_token }
-    return await createLoginCredentials({ user, issuer })
 
+    const data = await createLoginCredentials({ user, issuer })
+    await createRevokeToken(payload)
+    return data
+
+}
+
+export const logout = async (payload, user, { action = LogoutEnum.DEVICE }) => {
+    console.log({ user });
+
+
+    switch (action) {
+        case LogoutEnum.ALL:
+            user.changeCredentialsTime = new Date();
+            await user.save()
+            const revokeKeys = await keys({ prefix: userBaseRevokeTokenkey({ userId: payload.sub }) })
+            if (revokeKeys.length) await del({ key: revokeKeys })
+            break;
+        default:
+            await createRevokeToken(payload)
+            break;
+    }
+    return
 }

@@ -35,7 +35,8 @@ const userSchema = new mongoose.Schema({
         type: Number,
         default: RoleEnum.USER,
         enum: Object.values(RoleEnum)
-    }
+    },
+    changeCredentialsTime: Date
 
 }, {
     timestamps: true,

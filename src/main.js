@@ -11,6 +11,7 @@ import {
 import { connectDB } from "./DB/db.js";
 import { globalErrorHandling } from "./middleware/error.middleware.js";
 import { PORT } from "./config.js";
+import { set } from "./common/services/cache.service.js";
 // import { decryption, encryption } from "./common/security/encryption.security.js";
 // const encValue = await encryption("muaied");
 // const plain = decryption(encValue)
@@ -18,10 +19,14 @@ import { PORT } from "./config.js";
 
 
 //DB connection
-connectDB(app, PORT);
+await connectDB(app, PORT);
+
+// await set({ key: "name", value: "muaied", ttl: 60 })
+await set({ key: "gender", value: { gender: "male" } })
 
 //appliction-level-middleware
 app.use(cors(), express.json());
+
 //appliction routing
 app.get("/", async (req, res, next) => {
   return res.json({ message: "welcome to my API" });

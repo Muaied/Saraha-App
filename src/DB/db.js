@@ -1,12 +1,12 @@
 import mongoose from "mongoose";
 import { DB_URI } from "../config.js";
-import { userModel } from "./model/user.model.js";
+import { connectRedis } from "./redis.connection.js";
 
 export const connectDB = async (app, port) => {
   try {
     await mongoose.connect(DB_URI, { serverSelectionTimeoutMS: 30000 });
     console.log("Database Connected");
-    await userModel.syncIndexes()
+    await connectRedis()
     app.listen(port, () => {
       console.log(`Server is running on port ${port}`);
     });
