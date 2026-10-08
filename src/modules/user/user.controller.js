@@ -4,7 +4,29 @@ import { profile, update, rotateToken, logout } from './user.service.js';
 import { authentication, authorization } from '../../middleware/authentication.middelware.js';
 import { TokenTypeEnum } from '../../common/enum/security.enum.js';
 import { RoleEnum } from '../../common/enum/user.gender.js';
+import { localFileUpload, fileValidation } from '../../common/utils/multer/index.js';
+import { uploadMidddleware } from '../../middleware/multer.middleware.js';
 const router = Router()
+
+//validation: [fileValidation.image[0], ...fileValidation.files]
+
+// localFileUpload({ maxFileSize: 3, validation: fileValidation.image }).single('attachment'),
+// processMulterUpload({ customPath: "users/profile", validation: fileValidation.image }),
+router.patch('/profile-image',
+    authentication(),
+    uploadMidddleware({
+        isRequired: false,
+        multerMiddleware: localFileUpload({ maxFileSize: 1 }).single('attachment'),
+        customPath: "users",
+        validation: fileValidation.image
+    }),
+    async (req, res, next) => {
+        // req.user.image = req.file.finalPath
+        // await req.user.save()
+        return successResponse({ res, data: { file: req.file ?? req.files } })
+    })
+
+
 
 router.get('/', authentication(), async (req, res, next) => {
     const data = await profile(req.user)

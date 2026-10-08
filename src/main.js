@@ -27,6 +27,8 @@ await set({ key: "gender", value: { gender: "male" } })
 //appliction-level-middleware
 app.use(cors(), express.json());
 
+app.use('/assets', express.static('./assets'))
+
 //appliction routing
 app.get("/", async (req, res, next) => {
   return res.json({ message: "welcome to my API" });

@@ -42,7 +42,43 @@ export const signup = (lang) => {
 
     })
 }
+export const confirmEmail = (lang) => {
+    return z.object({
+        body: z.strictObject({
+            email: generalValidationFields.email(lang),
+            otp: generalValidationFields.otp(lang)
 
+        })
+    })
+}
+
+export const resendConfirmEmail = (lang) => {
+    return z.object({
+        body: z.strictObject({
+            email: generalValidationFields.email(lang)
+
+        })
+    })
+}
+
+export const resetForgotPassword = (lang) => {
+    return z.object({
+        body: z.strictObject({
+            email: generalValidationFields.email(lang),
+            otp: generalValidationFields.otp(lang),
+            password: generalValidationFields.password(lang),
+            confirmPassword: generalValidationFields.password(lang),
+        }).superRefine((data, ctx) => {
+            if (data.password !== data.confirmPassword) {
+                ctx.addIssue({
+                    code: "custom",
+                    message: "Passwords don't match",
+                    path: ["confirmPassword"]
+                })
+            }
+        })
+    })
+}
 
 
 

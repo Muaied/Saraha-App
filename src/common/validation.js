@@ -29,6 +29,10 @@ const validationMessages = {
     7: {
         ar: "كلمة المرور غير صحيحة",
         en: "invalid password"
+    },
+    8: {
+        ar: "رمز التحقق يجب أن يكون 6 أرقام",
+        en: "OTP must be a 6-digit number"
     }
 
 }
@@ -46,5 +50,6 @@ export const generalValidationFields = {
     username: (lang) => z.string().min(3, { message: getValidationMessage(lang, 1) }).max(20, { message: getValidationMessage(lang, 2) }),
     phone: (lang) => z.e164(),
     confirmPassword: (lang) => z.string().min(8, { message: getValidationMessage(lang, 4) }).max(16, { message: getValidationMessage(lang, 5) }),
-    gender: (lang) => z.enum(GenderEnum, { message: getValidationMessage(lang, 6) })
+    gender: (lang) => z.enum(GenderEnum, { message: getValidationMessage(lang, 6) }),
+    otp: (lang) => z.string().length(6, { message: getValidationMessage(lang, 8) }).regex(/^\d{6}$/, { message: getValidationMessage(lang, 8) })
 }
